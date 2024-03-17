@@ -2,8 +2,10 @@ import { encode } from "@nem035/gpt-3-encoder";
 
 export const allModels = [
   { name: "Follow global model", id: "global" },
-  { name: "Mixtral 8x7b 32k", id: "mixtral-8x7b-32768" },
-  { name: "Llama2 70B 4k", id: "llama2-70b-4096" },
+  {
+    value: "gemma-7b-it",
+    title: "Gemma 7B",
+  },
 ];
 
 export const currentDate = new Date().toLocaleString("en-US", {

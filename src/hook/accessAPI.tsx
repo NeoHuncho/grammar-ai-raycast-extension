@@ -1,9 +1,9 @@
-import { getSelectedText, Detail, ActionPanel, Action, showToast, Toast, Icon } from "@raycast/api";
-import { useEffect, useState } from "react";
-import { global_model, enable_streaming, openai } from "./configAPI";
+import { Action, ActionPanel, Clipboard, Detail, Icon, Toast, showToast } from "@raycast/api";
 import { Stream } from "openai/streaming";
-import { allModels as changeModels, currentDate, countToken, estimatePrice } from "./utils";
+import { useEffect, useState } from "react";
 import { ResultViewProps } from "./ResultView.types";
+import { enable_streaming, global_model, openai } from "./configAPI";
+import { allModels as changeModels, countToken, currentDate, estimatePrice } from "./utils";
 
 export default function ResultView(props: ResultViewProps) {
   const { sys_prompt, selected_text, user_extra_msg, model_override, toast_title, temperature } = props;
@@ -48,18 +48,18 @@ export default function ResultView(props: ResultViewProps) {
     let selectedText = selected_text;
     if (selectedText === undefined) {
       try {
-        selectedText = await getSelectedText();
+        
+        selectedText= await Clipboard.readText();
+        if(!selectedText) throw new Error("No text selected");
       } catch (error) {
-        console.log(error);
         await showToast({ style: Toast.Style.Failure, title: "Error" });
         setLoading(false);
         setResponse(
-          "⚠️ Raycast was unable to get the selected text. You may try copying the text to a text editor and try again.",
+          "⚠️ Raycast was unable to get the selected text. Go ",
         );
         return;
       }
     }
-
     const resp = await getChatResponse(sys_prompt, selectedText, newModel ?? model, newTemp ?? temp);
     if (!resp) return;
 
